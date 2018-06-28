@@ -88,10 +88,18 @@ class Game extends React.Component {
     const squares = current.squares.slice();
     const location = current.location.slice();
 
+
+    document.getElementById(this.state.stepNumber).style.fontWeight = "normal";
+    // eslint-disable-next-line
+    document.getElementById(this.state.stepNumber + 1) === null ? "" :
+        document.getElementById(this.state.stepNumber + 1).style.fontWeight = "bold";
+    
+    console.log(this.state.stepNumber + 1);
+
     if(calculateWinner(squares) || squares[i]) {
       return;
     }
-    location[this.state.stepNumber + 1] = this.colRow(i,squares);
+    location[this.state.stepNumber + 1] = this.colRow(i);
     squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
       history: history.concat([{
@@ -104,13 +112,16 @@ class Game extends React.Component {
   }
 
   jumpTo(step) {
+    document.getElementById(this.state.stepNumber).style.fontWeight = "normal";
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2) === 0,
     });
+
+    document.getElementById(step).style.fontWeight = "bold";
   }
 
-  colRow(i,step) {
+  colRow(i) {
     const col = [
       [0, 1 ,2],
       [3, 4, 5],
@@ -121,10 +132,6 @@ class Game extends React.Component {
       for(let k = 0; k < col[j].length; k++) {
         if(col[j][k] === i){
           return ` X: ${col.indexOf(col[j]) + 1 } Y: ${col[j].indexOf(i) + 1}`;
-          // console.log(`Column: ${col[j].indexOf(i) + 1}`);
-          // console.log(`Row: ${col.indexOf(col[j]) + 1 }`);          
-          // console.log(col[j].indexOf(i) + 1);
-          // console.log(i);
         }
       }
     }
@@ -137,10 +144,14 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
-      const desc = move && step.location ? 'Go to move #' + move + step.location[move]: 'Go to game start';
+      const desc = move && step.location ? 'Go to move # ' + move + step.location[move] : 'Go to game start';
+
       return(
       <li key={move}>
-        <button onClick={() => this.jumpTo(move)}>{desc}</button>
+        <button 
+        onClick={() => this.jumpTo(move)} 
+        style={{'fontWeight': 'bold'}}
+        id={move}>{desc}</button>
       </li>);
     });
 
